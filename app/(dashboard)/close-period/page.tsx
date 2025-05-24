@@ -56,7 +56,7 @@ export default function ClosePeriodPage() {
         description: "Period closed successfully",
       })
     } catch (error: any) {
-      console.error("Error closing period:", error)
+      console.warn("Error closing period:", error)
       toast({
         title: "Error",
         description: error.message || "Failed to close period. Please try again.",

@@ -186,7 +186,7 @@ export default function TransactionsPage() {
       const data = await response.json()
       setTransactions(data)
     } catch (error) {
-      console.error("Error fetching transactions:", error)
+      console.warn("Error fetching transactions:", error)
       toast({
         title: "Error",
         description: "Failed to load transactions. Please try again.",
@@ -208,7 +208,7 @@ export default function TransactionsPage() {
       const data = await response.json()
       setInventoryItems(data.filter((item: InventoryItem) => item.isActive))
     } catch (error) {
-      console.error("Error fetching inventory items:", error)
+      console.warn("Error fetching inventory items:", error)
       toast({
         title: "Error",
         description: "Failed to load inventory items. Please try again.",
@@ -272,7 +272,7 @@ export default function TransactionsPage() {
       setOpenDialog(false)
       fetchTransactions()
     } catch (error: any) {
-      console.error("Error creating transaction:", error)
+      console.warn("Error creating transaction:", error)
       toast({
         title: "Error",
         description: error.message || "Failed to create transaction. Please try again.",

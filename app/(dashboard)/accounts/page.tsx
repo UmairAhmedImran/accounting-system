@@ -124,7 +124,7 @@ export default function AccountsPage() {
       const data = await response.json()
       setAccounts(data)
     } catch (error) {
-      console.error("Error fetching accounts:", error)
+      console.warn("Error fetching accounts:", error)
       toast({
         title: "Error",
         description: "Failed to load accounts. Please try again.",
@@ -180,7 +180,7 @@ export default function AccountsPage() {
 
       fetchAccounts()
     } catch (error) {
-      console.error("Error deleting account:", error)
+      console.warn("Error deleting account:", error)
       toast({
         title: "Error",
         description: "Failed to delete account. Please try again.",
@@ -218,7 +218,7 @@ export default function AccountsPage() {
       setOpenDialog(false)
       fetchAccounts()
     } catch (error: any) {
-      console.error("Error saving account:", error)
+      console.warn("Error saving account:", error)
       toast({
         title: "Error",
         description: error.message || "Failed to save account. Please try again.",

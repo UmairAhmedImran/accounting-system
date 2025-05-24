@@ -111,7 +111,7 @@ export default function LedgerPage() {
         fetchLedger()
       }
     } catch (error) {
-      console.error("Error fetching accounts:", error)
+      console.warn("Error fetching accounts:", error)
       toast({
         title: "Error",
         description: "Failed to load accounts. Please try again.",
@@ -152,7 +152,7 @@ export default function LedgerPage() {
       const data = await response.json()
       setLedger(data)
     } catch (error) {
-      console.error("Error fetching ledger:", error)
+      console.warn("Error fetching ledger:", error)
       toast({
         title: "Error",
         description: "Failed to load ledger data. Please try again.",

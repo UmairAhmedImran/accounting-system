@@ -139,7 +139,7 @@ export default function InventoryPage() {
       const data = await response.json()
       setInventoryItems(data)
     } catch (error) {
-      console.error("Error fetching inventory items:", error)
+      console.warn("Error fetching inventory items:", error)
       toast({
         title: "Error",
         description: "Failed to load inventory items. Please try again.",
@@ -205,7 +205,7 @@ export default function InventoryPage() {
 
       fetchInventoryItems()
     } catch (error) {
-      console.error("Error deleting inventory item:", error)
+      console.warn("Error deleting inventory item:", error)
       toast({
         title: "Error",
         description: "Failed to delete inventory item. Please try again.",
@@ -243,7 +243,7 @@ export default function InventoryPage() {
       setOpenDialog(false)
       fetchInventoryItems()
     } catch (error: any) {
-      console.error("Error saving inventory item:", error)
+      console.warn("Error saving inventory item:", error)
       toast({
         title: "Error",
         description: error.message || "Failed to save inventory item. Please try again.",

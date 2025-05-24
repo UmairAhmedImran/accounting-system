@@ -145,7 +145,7 @@ export default function JournalEntriesPage() {
       const data = await response.json()
       setJournalEntries(data)
     } catch (error) {
-      console.error("Error fetching journal entries:", error)
+      console.warn("Error fetching journal entries:", error)
       toast({
         title: "Error",
         description: "Failed to load journal entries. Please try again.",
@@ -167,7 +167,7 @@ export default function JournalEntriesPage() {
       const data = await response.json()
       setAccounts(data.filter((account: Account) => account.isActive))
     } catch (error) {
-      console.error("Error fetching accounts:", error)
+      console.warn("Error fetching accounts:", error)
       toast({
         title: "Error",
         description: "Failed to load accounts. Please try again.",
@@ -250,7 +250,7 @@ export default function JournalEntriesPage() {
       setOpenDialog(false)
       fetchJournalEntries()
     } catch (error: any) {
-      console.error("Error creating journal entry:", error)
+      console.warn("Error creating journal entry:", error)
       toast({
         title: "Error",
         description: error.message || "Failed to create journal entry. Please try again.",

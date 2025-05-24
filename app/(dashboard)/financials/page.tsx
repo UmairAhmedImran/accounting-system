@@ -114,7 +114,7 @@ export default function FinancialsPage() {
       const balanceData = await balanceResponse.json()
       setBalanceSheet(balanceData)
     } catch (error) {
-      console.error("Error fetching financials:", error)
+      console.warn("Error fetching financials:", error)
       toast({
         title: "Error",
         description: "Failed to load financial statements. Please try again.",
