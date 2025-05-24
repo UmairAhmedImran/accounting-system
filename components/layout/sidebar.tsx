@@ -19,16 +19,16 @@ import {
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
 
   return (
     <div className={cn("pb-12", className)}>
-      <div className="space-y-4 py-4">
-        <div className="px-4 py-2">
-          <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">Dashboard</h2>
+      <div className="flex flex-col gap-y-8">
+        <div>
+          <h2 className="mb-1 text-lg font-semibold tracking-tight">Dashboard</h2>
           <div className="space-y-1">
             <Button
               asChild
@@ -42,8 +42,8 @@ export function Sidebar({ className }: SidebarProps) {
             </Button>
           </div>
         </div>
-        <div className="px-4 py-2">
-          <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">Accounting</h2>
+        <div>
+          <h2 className="mb-1 text-lg font-semibold tracking-tight">Accounting</h2>
           <div className="space-y-1">
             <Button asChild variant={pathname === "/accounts" ? "secondary" : "ghost"} className="w-full justify-start">
               <Link href="/accounts">
@@ -99,8 +99,8 @@ export function Sidebar({ className }: SidebarProps) {
             </Button>
           </div>
         </div>
-        <div className="px-4 py-2">
-          <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">Inventory</h2>
+        <div>
+          <h2 className="mb-1 text-lg font-semibold tracking-tight">Inventory</h2>
           <div className="space-y-1">
             <Button
               asChild
@@ -124,8 +124,8 @@ export function Sidebar({ className }: SidebarProps) {
             </Button>
           </div>
         </div>
-        <div className="px-4 py-2">
-          <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">Administration</h2>
+        <div>
+          <h2 className="mb-1 text-lg font-semibold tracking-tight">Administration</h2>
           <div className="space-y-1">
             <Button
               asChild

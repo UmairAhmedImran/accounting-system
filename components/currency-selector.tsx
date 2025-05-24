@@ -15,7 +15,7 @@ export function CurrencySelector() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className="w-[140px] justify-between">
+        <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between">
           <span className="flex items-center">
             {currency.symbol} {currency.code}
           </span>

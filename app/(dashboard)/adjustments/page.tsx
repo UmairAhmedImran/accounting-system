@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
@@ -33,6 +34,7 @@ interface Account {
   name: string
   code: string
   type: string
+  isActive: boolean
 }
 
 interface EntryItem {
@@ -295,6 +297,35 @@ export default function AdjustmentsPage() {
   const totalCredits = formData.entries.reduce((sum, entry) => sum + (Number(entry.credit) || 0), 0)
   const isBalanced = Math.abs(totalDebits - totalCredits) < 0.01
 
+  const renderLoadingSkeleton = () => (
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b">
+            <th className="px-4 py-2 text-left">Date</th>
+            <th className="px-4 py-2 text-left">Description</th>
+            <th className="px-4 py-2 text-left">Type</th>
+            <th className="px-4 py-2 text-right">Amount</th>
+            <th className="px-4 py-2 text-left">Reference</th>
+            <th className="px-4 py-2 text-left">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[...Array(5)].map((_, index) => (
+            <tr key={index} className="border-b">
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-40" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24 ml-auto" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -305,7 +336,11 @@ export default function AdjustmentsPage() {
         </Button>
       </div>
 
-      <DataTable columns={columns} data={adjustments} searchKey="description" />
+      {loading ? (
+        renderLoadingSkeleton()
+      ) : (
+        <DataTable columns={columns} data={adjustments} searchKey="description" />
+      )}
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="sm:max-w-[700px]">

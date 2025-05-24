@@ -15,12 +15,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
 import { useCurrency } from "@/context/currency-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface Account {
   _id: string
   name: string
   code: string
   type: string
+  isActive: boolean
 }
 
 interface LedgerEntry {
@@ -44,6 +46,28 @@ interface LedgerAccount {
     credit: number
   }
   balance: number
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      {[1, 2].map((i) => (
+        <Card key={i}>
+          <CardHeader className="bg-muted/50">
+            <Skeleton className="h-6 w-1/3" />
+            <Skeleton className="h-4 w-1/4" />
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="space-y-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  )
 }
 
 export default function LedgerPage() {
@@ -255,9 +279,7 @@ export default function LedgerPage() {
       </Card>
 
       {loading ? (
-        <div className="flex h-40 items-center justify-center">
-          <p>Loading ledger data...</p>
-        </div>
+        <LoadingSkeleton />
       ) : ledger.length === 0 ? (
         <Card>
           <CardContent className="flex h-40 items-center justify-center">

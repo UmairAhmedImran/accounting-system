@@ -26,8 +26,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
 import type { ColumnDef } from "@tanstack/react-table"
+import { Skeleton } from "@/components/ui/skeleton"
 
-// Add the useCurrency import
 import { useCurrency } from "@/context/currency-context"
 
 interface InventoryItem {
@@ -38,6 +38,7 @@ interface InventoryItem {
   costPrice: number
   sellingPrice: number
   quantity: number
+  isActive: boolean
 }
 
 interface TransactionItem {
@@ -63,6 +64,52 @@ interface Transaction {
   createdAt: string
 }
 
+function TransactionsSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-10 w-[250px]" />
+        <Skeleton className="h-10 w-[150px]" />
+      </div>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-8 w-[200px]" />
+            <Skeleton className="h-8 w-[150px]" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-8 w-[200px]" />
+              <Skeleton className="h-8 w-[100px]" />
+            </div>
+            <div className="rounded-lg border">
+              <div className="border-b">
+                <div className="grid grid-cols-6 p-3">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <Skeleton key={i} className="h-5 w-[100px]" />
+                  ))}
+                </div>
+              </div>
+              <div className="p-3 space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="grid grid-cols-6 gap-4">
+                    {Array.from({ length: 6 }).map((_, j) => (
+                      <Skeleton key={j} className="h-5 w-[100px]" />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([])
@@ -77,7 +124,6 @@ export default function TransactionsPage() {
     reference: "",
   })
 
-  // Inside the component, add this line near the top
   const { formatCurrency } = useCurrency()
 
   const columns: ColumnDef<Transaction>[] = [
@@ -101,7 +147,6 @@ export default function TransactionsPage() {
       accessorKey: "description",
       header: "Description",
     },
-    // Replace the total cell formatter with our new currency formatter
     {
       accessorKey: "total",
       header: "Total",
@@ -186,7 +231,6 @@ export default function TransactionsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validate items
     if (formData.items.length < 1) {
       toast({
         title: "Validation Error",
@@ -196,7 +240,6 @@ export default function TransactionsPage() {
       return
     }
 
-    // Check if all items have an inventory item selected
     const hasEmptyItem = formData.items.some((item) => !item.inventoryItemId)
     if (hasEmptyItem) {
       toast({
@@ -256,7 +299,7 @@ export default function TransactionsPage() {
     }))
   }
 
-  const handleItemChange = (index: number, field: string, value: string | number) => {
+  const handleItemChange = (index: number, field: keyof TransactionItem, value: string | number) => {
     const newItems = [...formData.items]
 
     if (field === "inventoryItemId") {
@@ -264,7 +307,6 @@ export default function TransactionsPage() {
       let unitPrice = 0
 
       if (selectedItem) {
-        // Set default unit price based on transaction type
         if (["sale", "sale-return"].includes(formData.type)) {
           unitPrice = selectedItem.sellingPrice
         } else {
@@ -274,7 +316,7 @@ export default function TransactionsPage() {
 
       newItems[index] = {
         ...newItems[index],
-        [field]: value,
+        [field]: value as string,
         unitPrice,
         total: newItems[index].quantity * unitPrice,
       }
@@ -299,7 +341,6 @@ export default function TransactionsPage() {
 
   const handleChange = (field: string, value: any) => {
     if (field === "type") {
-      // Update unit prices based on transaction type
       const newItems = formData.items.map((item) => {
         if (!item.inventoryItemId) return item
 
@@ -334,8 +375,11 @@ export default function TransactionsPage() {
     }
   }
 
-  // Calculate total for the form
   const total = formData.items.reduce((sum, item) => sum + (item.total || 0), 0)
+
+  if (loading) {
+    return <TransactionsSkeleton />
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -455,14 +499,14 @@ export default function TransactionsPage() {
                       <div key={index} className="grid grid-cols-12 gap-4 mb-2">
                         <div className="col-span-5">
                           <Select
-                            value={item.inventoryItemId || "default"} // Updated default value
+                            value={item.inventoryItemId || "default"}
                             onValueChange={(value) => handleItemChange(index, "inventoryItemId", value)}
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="Select item" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="default">Select item</SelectItem> // Updated default value
+                              <SelectItem value="default">Select item</SelectItem>
                               {inventoryItems.map((invItem) => (
                                 <SelectItem key={invItem._id} value={invItem._id}>
                                   {invItem.name} ({invItem.sku})
@@ -511,7 +555,6 @@ export default function TransactionsPage() {
 
                     <div className="grid grid-cols-12 gap-4 mt-4 pt-4 border-t">
                       <div className="col-span-9 font-medium text-right">Total</div>
-                      {/* Replace the total formatting in the form */}
                       <div className="col-span-3 text-right font-medium">{formatCurrency(total)}</div>
                     </div>
                   </CardContent>

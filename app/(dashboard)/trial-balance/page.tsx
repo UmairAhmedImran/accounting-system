@@ -5,6 +5,7 @@ import { Download } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import { useCurrency } from "@/context/currency-context"
@@ -137,6 +138,47 @@ export default function TrialBalancePage() {
     )
   }
 
+  const renderLoadingSkeleton = () => (
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b">
+            <th className="px-4 py-2 text-left">Account Code</th>
+            <th className="px-4 py-2 text-left">Account Name</th>
+            <th className="px-4 py-2 text-left">Type</th>
+            <th className="px-4 py-2 text-right">Debit</th>
+            <th className="px-4 py-2 text-right">Credit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[...Array(5)].map((_, index) => (
+            <tr key={index} className="border-b">
+              <td className="px-4 py-2"><Skeleton className="h-4 w-20" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-40" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24 ml-auto" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24 ml-auto" /></td>
+            </tr>
+          ))}
+          <tr className="border-b bg-muted/50">
+            <td className="px-4 py-2" colSpan={3}>
+              <Skeleton className="h-4 w-16" />
+            </td>
+            <td className="px-4 py-2">
+              <Skeleton className="h-4 w-24 ml-auto" />
+            </td>
+            <td className="px-4 py-2">
+              <Skeleton className="h-4 w-24 ml-auto" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="mt-4 text-right">
+        <Skeleton className="h-4 w-40 ml-auto" />
+      </div>
+    </div>
+  )
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -160,23 +202,11 @@ export default function TrialBalancePage() {
             </TabsList>
 
             <TabsContent value="unadjusted">
-              {loading ? (
-                <div className="flex h-40 items-center justify-center">
-                  <p>Loading trial balance...</p>
-                </div>
-              ) : (
-                renderTrialBalanceTable(trialBalance)
-              )}
+              {loading ? renderLoadingSkeleton() : renderTrialBalanceTable(trialBalance)}
             </TabsContent>
 
             <TabsContent value="adjusted">
-              {loading ? (
-                <div className="flex h-40 items-center justify-center">
-                  <p>Loading adjusted trial balance...</p>
-                </div>
-              ) : (
-                renderTrialBalanceTable(adjustedTrialBalance)
-              )}
+              {loading ? renderLoadingSkeleton() : renderTrialBalanceTable(adjustedTrialBalance)}
             </TabsContent>
           </Tabs>
         </CardContent>

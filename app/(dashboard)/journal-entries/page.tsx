@@ -27,6 +27,7 @@ import { toast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
 import type { ColumnDef } from "@tanstack/react-table"
 import { useCurrency } from "@/context/currency-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface Account {
   _id: string
@@ -312,6 +313,49 @@ export default function JournalEntriesPage() {
   const totalDebits = formData.entries.reduce((sum, entry) => sum + (Number(entry.debit) || 0), 0)
   const totalCredits = formData.entries.reduce((sum, entry) => sum + (Number(entry.credit) || 0), 0)
   const isBalanced = Math.abs(totalDebits - totalCredits) < 0.01
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight">Journal Entries</h1>
+          <Button disabled>
+            <Plus className="mr-2 h-4 w-4" />
+            New Entry
+          </Button>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Journal Entries</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-8 w-[100px]" />
+              </div>
+              <div className="rounded-lg border">
+                <div className="border-b">
+                  <div className="flex p-4">
+                    <Skeleton className="h-4 w-[150px]" />
+                  </div>
+                </div>
+                <div className="divide-y">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="flex items-center p-4">
+                      <Skeleton className="mr-4 h-4 w-[200px]" />
+                      <Skeleton className="h-4 w-[100px]" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-4">

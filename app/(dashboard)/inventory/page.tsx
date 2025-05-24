@@ -20,9 +20,9 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { ColumnDef } from "@tanstack/react-table"
 
-// Add the useCurrency import
 import { useCurrency } from "@/context/currency-context"
 
 interface InventoryItem {
@@ -57,7 +57,6 @@ export default function InventoryPage() {
     isActive: true,
   })
 
-  // Inside the component, add this line near the top
   const { formatCurrency } = useCurrency()
 
   const columns: ColumnDef<InventoryItem>[] = [
@@ -88,7 +87,6 @@ export default function InventoryPage() {
         )
       },
     },
-    // Replace the costPrice cell formatter with our new currency formatter
     {
       accessorKey: "costPrice",
       header: "Cost Price",
@@ -97,7 +95,6 @@ export default function InventoryPage() {
         return <div className="text-right font-medium">{formatCurrency(amount)}</div>
       },
     },
-    // Replace the sellingPrice cell formatter with our new currency formatter
     {
       accessorKey: "sellingPrice",
       header: "Selling Price",
@@ -267,8 +264,44 @@ export default function InventoryPage() {
   }
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: name === "isActive" ? value === "true" : value }))
   }
+
+  const renderLoadingSkeleton = () => (
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b">
+            <th className="px-4 py-2 text-left">SKU</th>
+            <th className="px-4 py-2 text-left">Name</th>
+            <th className="px-4 py-2 text-left">Category</th>
+            <th className="px-4 py-2 text-left">Quantity</th>
+            <th className="px-4 py-2 text-right">Cost Price</th>
+            <th className="px-4 py-2 text-right">Selling Price</th>
+            <th className="px-4 py-2 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[...Array(5)].map((_, index) => (
+            <tr key={index} className="border-b">
+              <td className="px-4 py-2"><Skeleton className="h-4 w-20" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-40" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-16" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24 ml-auto" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24 ml-auto" /></td>
+              <td className="px-4 py-2">
+                <div className="flex items-center gap-2 justify-end">
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
 
   return (
     <div className="flex flex-col gap-4">
@@ -280,7 +313,7 @@ export default function InventoryPage() {
         </Button>
       </div>
 
-      <DataTable columns={columns} data={inventoryItems} searchKey="name" />
+      {loading ? renderLoadingSkeleton() : <DataTable columns={columns} data={inventoryItems} searchKey="name" />}
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="sm:max-w-[600px]">
@@ -388,7 +421,7 @@ export default function InventoryPage() {
                 <Label htmlFor="isActive">Status</Label>
                 <Select
                   value={formData.isActive ? "true" : "false"}
-                  onValueChange={(value) => handleSelectChange("isActive", value === "true")}
+                  onValueChange={(value) => handleSelectChange("isActive", value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select status" />

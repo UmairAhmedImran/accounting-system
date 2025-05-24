@@ -11,7 +11,7 @@ export default function DashboardLayout({
     <div className="flex min-h-screen flex-col">
       <Header />
       <div className="flex flex-1">
-        <aside className="hidden w-64 border-r md:block">
+        <aside className="hidden w-64 border-r md:block p-6">
           <Sidebar />
         </aside>
         <main className="flex-1 p-6">{children}</main>

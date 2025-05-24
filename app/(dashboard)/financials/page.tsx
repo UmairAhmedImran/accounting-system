@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // Add the useCurrency import
 import { useCurrency } from "@/context/currency-context"
@@ -135,6 +136,19 @@ export default function FinancialsPage() {
     })
   }
 
+  const LoadingSkeleton = () => (
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-3/4" />
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="flex justify-between items-center">
+          <Skeleton className="h-6 w-1/2" />
+          <Skeleton className="h-6 w-24" />
+        </div>
+      ))}
+      <Skeleton className="h-8 w-full mt-6" />
+    </div>
+  )
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -237,9 +251,7 @@ export default function FinancialsPage() {
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="flex h-40 items-center justify-center">
-                  <p>Loading income statement...</p>
-                </div>
+                <LoadingSkeleton />
               ) : !incomeStatement ? (
                 <div className="flex h-40 items-center justify-center">
                   <p className="text-muted-foreground">No data available.</p>
@@ -310,9 +322,7 @@ export default function FinancialsPage() {
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="flex h-40 items-center justify-center">
-                  <p>Loading balance sheet...</p>
-                </div>
+                <LoadingSkeleton />
               ) : !balanceSheet ? (
                 <div className="flex h-40 items-center justify-center">
                   <p className="text-muted-foreground">No data available.</p>

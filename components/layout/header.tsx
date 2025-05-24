@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { LogOut, Menu, User } from "lucide-react"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,9 +15,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Sidebar } from "@/components/layout/sidebar"
 import { CurrencySelector } from "@/components/currency-selector"
+import { ToggleTheme } from "@/components/toggle-theme"
 
 export function Header() {
   const router = useRouter()
@@ -41,34 +43,35 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link href="/dashboard" className="mr-6 flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block">Accounting System</span>
+      <div className="flex h-16 items-center justify-between px-4 md:px-8">
+        <div className="flex items-center gap-6">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="">
+              <VisuallyHidden>
+                <SheetTitle />
+              </VisuallyHidden>
+              <Link href="/dashboard" className="flex items-center" onClick={() => setOpen(false)}>
+                <span className="text-lg font-semibold">Accounting System</span>
+              </Link>
+              <div className="mt-6">
+                <Sidebar />
+              </div>
+            </SheetContent>
+          </Sheet>
+          <Link href="/dashboard" className="hidden items-center space-x-2 md:flex">
+            <span className="text-lg font-semibold">Accounting System</span>
           </Link>
         </div>
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="mr-2 md:hidden">
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle Menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="pr-0">
-            <Link href="/dashboard" className="flex items-center" onClick={() => setOpen(false)}>
-              <span className="font-bold">Accounting System</span>
-            </Link>
-            <div className="my-4">
-              <Sidebar />
-            </div>
-          </SheetContent>
-        </Sheet>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-            <div className="hidden md:block font-semibold">Accounting & Inventory Management</div>
-            <div className="md:hidden font-semibold">Accounting System</div>
-          </div>
+
+        <div className="flex items-center justify-end gap-4">
           <div className="flex items-center gap-2">
+            <ToggleTheme />
             <CurrencySelector />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -79,13 +82,6 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/profile">Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings">Settings</Link>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />

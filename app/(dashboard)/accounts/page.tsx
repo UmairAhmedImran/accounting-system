@@ -21,8 +21,8 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { ColumnDef } from "@tanstack/react-table"
-// Add the useCurrency import
 import { useCurrency } from "@/context/currency-context"
 
 interface Account {
@@ -49,7 +49,6 @@ export default function AccountsPage() {
     isActive: true,
   })
 
-  // Inside the component, add this line near the top
   const { formatCurrency } = useCurrency()
 
   const columns: ColumnDef<Account>[] = [
@@ -237,6 +236,40 @@ export default function AccountsPage() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  const renderLoadingSkeleton = () => (
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b">
+            <th className="px-4 py-2 text-left">Code</th>
+            <th className="px-4 py-2 text-left">Name</th>
+            <th className="px-4 py-2 text-left">Type</th>
+            <th className="px-4 py-2 text-right">Balance</th>
+            <th className="px-4 py-2 text-left">Status</th>
+            <th className="px-4 py-2 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[...Array(5)].map((_, index) => (
+            <tr key={index} className="border-b">
+              <td className="px-4 py-2"><Skeleton className="h-4 w-20" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-40" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24 ml-auto" /></td>
+              <td className="px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+              <td className="px-4 py-2">
+                <div className="flex items-center justify-end gap-2">
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -247,7 +280,11 @@ export default function AccountsPage() {
         </Button>
       </div>
 
-      <DataTable columns={columns} data={accounts} searchKey="name" />
+      {loading ? (
+        renderLoadingSkeleton()
+      ) : (
+        <DataTable columns={columns} data={accounts} searchKey="name" />
+      )}
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="sm:max-w-[500px]">
@@ -300,7 +337,7 @@ export default function AccountsPage() {
                 <Label htmlFor="isActive">Status</Label>
                 <Select
                   value={formData.isActive ? "true" : "false"}
-                  onValueChange={(value) => handleSelectChange("isActive", value === "true")}
+                  onValueChange={(value) => handleSelectChange("isActive", value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select status" />
