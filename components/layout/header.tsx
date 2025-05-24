@@ -37,7 +37,7 @@ export function Header() {
         router.push("/login")
       }
     } catch (error) {
-      console.error("Logout error:", error)
+      console.warn("Logout error:", error)
     }
   }
 

@@ -131,7 +131,7 @@ export default function AdjustmentsPage() {
       const data = await response.json()
       setAdjustments(data)
     } catch (error) {
-      console.error("Error fetching adjustments:", error)
+      console.warn("Error fetching adjustments:", error)
       toast({
         title: "Error",
         description: "Failed to load adjustments. Please try again.",
@@ -153,7 +153,7 @@ export default function AdjustmentsPage() {
       const data = await response.json()
       setAccounts(data.filter((account: Account) => account.isActive))
     } catch (error) {
-      console.error("Error fetching accounts:", error)
+      console.warn("Error fetching accounts:", error)
       toast({
         title: "Error",
         description: "Failed to load accounts. Please try again.",
@@ -233,7 +233,7 @@ export default function AdjustmentsPage() {
       setOpenDialog(false)
       fetchAdjustments()
     } catch (error: any) {
-      console.error("Error creating adjustment:", error)
+      console.warn("Error creating adjustment:", error)
       toast({
         title: "Error",
         description: error.message || "Failed to create adjustment. Please try again.",

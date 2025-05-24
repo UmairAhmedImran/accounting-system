@@ -22,7 +22,7 @@ export default function DashboardPage() {
         // You can implement actual API calls here to fetch real-time data
         // For now, we'll use the static data
       } catch (error) {
-        console.error("Error fetching dashboard data:", error)
+        console.warn("Error fetching dashboard data:", error)
       }
     }
 

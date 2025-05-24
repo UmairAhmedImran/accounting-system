@@ -53,7 +53,7 @@ export default function TrialBalancePage() {
       const data = await response.json()
       setTrialBalance(data)
     } catch (error) {
-      console.error("Error fetching trial balance:", error)
+      console.warn("Error fetching trial balance:", error)
       toast({
         title: "Error",
         description: "Failed to load trial balance. Please try again.",
@@ -75,7 +75,7 @@ export default function TrialBalancePage() {
       const data = await response.json()
       setAdjustedTrialBalance(data)
     } catch (error) {
-      console.error("Error fetching adjusted trial balance:", error)
+      console.warn("Error fetching adjusted trial balance:", error)
       toast({
         title: "Error",
         description: "Failed to load adjusted trial balance. Please try again.",
